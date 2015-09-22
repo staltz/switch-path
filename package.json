@@ -1,0 +1,42 @@
+{
+  "name": "switch-path",
+  "version": "1.0.0",
+  "description": "switch case for URLs, a small tool for routing in JavaScript",
+  "main": "lib/index.js",
+  "author": "Andre Staltz",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyclejs/switch-path"
+  },
+  "devDependencies": {
+    "babel": "5.8.x",
+    "babelify": "6.1.x",
+    "browserify": "11.0.1",
+    "chai": "^3.3.0",
+    "eslint": "1.0.x",
+    "eslint-config-cycle": "3.0.x",
+    "eslint-plugin-cycle": "1.0.x",
+    "eslint-plugin-no-class": "0.1.x",
+    "markdox": "0.1.9",
+    "mocha": "^2.3.3",
+    "uglify-js": "2.4.24"
+  },
+  "scripts": {
+    "eslint": "eslint src/",
+    "mocha": "mocha --compilers js:babel/register test",
+    "test": "npm run eslint && npm run mocha",
+    "test-ci": "npm run eslint",
+    "browserify": "browserify src/index.js -t babelify --standalone switchPath --outfile dist/switch-path.js",
+    "uglify": "uglifyjs dist/switch-path.js -o dist/switch-path.min.js",
+    "precompile-lib": "rm -rf lib/ && mkdir -p lib",
+    "compile-lib": "babel -d lib/ src/",
+    "dist": "npm run browserify && npm run uglify",
+    "docs": "node ./scripts/make-api-docs.js",
+    "prepublish": "npm run compile-lib",
+    "release": "npm run release-patch",
+    "release-patch": "git checkout master && npm run dist; git commit -a -m 'Build dist/'; npm version patch && git push origin master --tags && npm publish --access=public",
+    "release-minor": "git checkout master && npm run dist; git commit -a -m 'Build dist/'; npm version minor && git push origin master --tags && npm publish --access=public",
+    "release-major": "git checkout master && npm run dist; git commit -a -m 'Build dist/'; npm version major && git push origin master --tags && npm publish --access=public"
+  }
+}
