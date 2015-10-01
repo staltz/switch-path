@@ -86,5 +86,5 @@ describe('switchPath', () => {
     });
     expect(path).to.be.equal('/1736');
     expect(value).to.be.equal('id is 1736');
-  })
+  });
 });
