@@ -36,13 +36,13 @@ describe('switchPath', () => {
     expect(value).to.be.equal(456);
   });
 
-  it('should NOT match a path on an incomplete pattern', () => {
+  it('should match a path on an incomplete pattern', () => {
     const {path, value} = switchPath('/home/foo', {
       '/bar': 123,
       '/home': 456,
     });
-    expect(path).to.be.equal(null);
-    expect(value).to.be.equal(null);
+    expect(path).to.be.equal('/home');
+    expect(value).to.be.equal(456);
   });
 
   it('should match a path with an extra trailing slash', () => {

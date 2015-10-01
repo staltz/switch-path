@@ -60,13 +60,6 @@ function getParamsFnValue(paramFn, params) {
   return handleTrailingSlash(paramFn)(params)
 }
 
-function validateMatchedPath(matchedPath, sourcePath, value) {
-  if (matchedPath !== sourcePath && matchedPath !== sourcePath.slice(0, -1)) {
-    return {path: null, value: null}
-  }
-  return {path: matchedPath, value}
-}
-
 function switchPath(sourcePath, routes) {
   validateSwitchPathPreconditions(sourcePath, routes)
   let matchedPath = null
@@ -97,7 +90,7 @@ function switchPath(sourcePath, routes) {
     }
   }
 
-  return validateMatchedPath(matchedPath, sourcePath, value)
+  return {path: matchedPath, value}
 }
 
 module.exports = switchPath
