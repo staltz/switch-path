@@ -49,6 +49,13 @@ function validatePatternPreconditions(pattern) {
   }
 }
 
+function validateMatchedPath(matchedPath, sourcePath, value) {
+  if (matchedPath !== sourcePath) {
+    return {path: null, value: null}
+  }
+  return {path: matchedPath, value}
+}
+
 function switchPath(sourcePath, routes) {
   validateSwitchPathPreconditions(sourcePath, routes)
   let matchedPath = null
@@ -80,11 +87,7 @@ function switchPath(sourcePath, routes) {
     }
   }
 
-  if (matchedPath !== sourcePath) {
-    return {path: null, value: null}
-  }
-
-  return {path: matchedPath, value}
+  return validateMatchedPath(matchedPath, sourcePath, value)
 }
 
 module.exports = switchPath
