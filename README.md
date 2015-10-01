@@ -19,6 +19,17 @@ const {path, value} = switchPath('/home/foo', {
 // value is 456
 ```
 
+Supports trailing slashes
+
+```js
+const {path, value} = switchPath('/home/foo/', {
+  '/bar': 123,
+  '/home/foo': 456,
+});
+// path is `/home/foo`
+// value is 456
+```
+
 Supports nested route configuration:
 
 ```js
@@ -29,6 +40,18 @@ const {path, value} = switchPath('/home/foo', {
   },
 });
 // path is `/home/foo`
+// value is 456
+```
+Supports base paths in nested route configurations
+```js
+const {path, value} = switchPath('/home', {
+  '/bar': 123,
+  '/home': {
+    '/': 456,
+    '/foo': 789
+  }
+});
+// path is `/home`
 // value is 456
 ```
 
@@ -64,5 +87,19 @@ const {path, value} = switchPath('/home/1736', {
   },
 });
 // path is `/home/1736`
+// value is 'id is 1736'
+```
+
+Match a route with `:param` parameters base inside nested configurations:
+
+```js
+const {path, value} = switchPath('/1736', {
+  '/bar': 123,
+  '/:id': {
+    '/': id => `id is ${id}`,
+    '/home': 789
+  }
+});
+// path is `/1736`
 // value is 'id is 1736'
 ```
