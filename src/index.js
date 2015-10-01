@@ -79,6 +79,11 @@ function switchPath(sourcePath, routes) {
       return {path: pattern, value: routes[pattern]}
     }
   }
+
+  if (matchedPath !== sourcePath) {
+    return {path: null, value: null}
+  }
+
   return {path: matchedPath, value}
 }
 
