@@ -49,8 +49,19 @@ function validatePatternPreconditions(pattern) {
   }
 }
 
+function handleTrailingSlash(paramsFn) {
+  if (isRouteConfigurationObject(paramsFn)) {
+    return paramsFn[`/`]
+  }
+  return paramsFn
+}
+
+function getParamsFnValue(paramFn, params) {
+  return handleTrailingSlash(paramFn)(params)
+}
+
 function validateMatchedPath(matchedPath, sourcePath, value) {
-  if (matchedPath !== sourcePath) {
+  if (matchedPath !== sourcePath && matchedPath !== sourcePath.slice(0, -1)) {
     return {path: null, value: null}
   }
   return {path: matchedPath, value}
@@ -71,11 +82,10 @@ function switchPath(sourcePath, routes) {
     }
     const params = matchesWithParams(sourcePath, pattern)
     if (params.length > 0) {
-      const paramsFn = routes[pattern]
       matchedPath = sourcePath
-      value = paramsFn(params)
+      value = getParamsFnValue(routes[pattern], params)
     }
-    if (isRouteConfigurationObject(routes[pattern])) {
+    if (isRouteConfigurationObject(routes[pattern]) && params.length === 0) {
       const child = switchPath(unprefixed(sourcePath, pattern), routes[pattern])
       if (child.path !== null) {
         matchedPath = pattern + child.path
@@ -83,7 +93,7 @@ function switchPath(sourcePath, routes) {
       }
     }
     if (pattern === sourcePath) {
-      return {path: pattern, value: routes[pattern]}
+      return {path: pattern, value: handleTrailingSlash(routes[pattern])}
     }
   }
 
