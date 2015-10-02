@@ -1,6 +1,6 @@
 function isPattern(candidate) {
   return typeof candidate === `string` &&
-    (candidate.charAt(0) === `/` || candidate.charAt(0) === `*`)
+    (candidate.charAt(0) === `/` || candidate === `*`)
 }
 
 function isRouteConfigurationObject(routes) {
