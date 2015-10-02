@@ -66,6 +66,20 @@ const {path, value} = switchPath('/home/foo', {
 // value is 456
 ```
 
+Optional not found pattern:
+
+```js
+const {path, value} = switchPath('/home/33', {
+  '/': 123,
+  'books': {
+    '/': 456,
+    '/:id': 789
+  },
+  '*': 'Route not found'
+});
+// path = '/home/33'
+// value = 'Route not found'
+```
 Match a route with `:param` parameters and get the parameter value in a function:
 
 ```js
