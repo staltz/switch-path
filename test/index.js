@@ -44,6 +44,17 @@ describe('switchPath', () => {
     expect(value).to.be.equal(456);
   });
 
+  it('should match an incomplete pattern on multipart path', () => {
+    const {path, value} = switchPath('/home/foo/bar', {
+      '/home': {
+        '/': 123,
+        '/foo': 456
+      }
+    });
+    expect(path).to.be.equal('/home/foo');
+    expect(value).to.be.equal(456);
+  });
+
   it('should not match a path overoptimistically', () => {
     const {path, value} = switchPath('/home/33/books/10', {
       '/': 123,

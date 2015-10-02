@@ -53,7 +53,7 @@ function validatePatternPreconditions(pattern) {
   }
 }
 
-function shouldCheck(routes, pattern) {
+function isNormalPattern(routes, pattern) {
   if (pattern === `*` || !routes.hasOwnProperty(pattern)) {
     return false
   }
@@ -80,28 +80,29 @@ function splitPath(path) {
   if (pathParts[pathParts.length - 1] === ``) {
     pathParts.pop()
   }
-  return pathParts.join(`/`)
+  return pathParts
 }
 
 function validatePath(sourcePath, matchedPath) {
   if (matchedPath === null) {
     return ``
   }
-  const newSourcePath = splitPath(sourcePath)
-  const newMatchedPath = splitPath(matchedPath)
-  if (newSourcePath !== newMatchedPath &&
-    sourcePath.split(`/`).splice(0,2).join(`/`) !== newMatchedPath)
-  {
-    return null
-  }
-  return newMatchedPath
+  const sourceParts = splitPath(sourcePath)
+  const matchedParts = splitPath(matchedPath)
+  const validPath = sourceParts.map((part, index) => {
+    if (part !== matchedParts[index]) {
+      return null
+    }
+    return part
+  }).filter(x => x !== null).join(`/`)
+  return validPath
 }
 
 function validate({sourcePath, matchedPath, value, routes}) {
   let validPath = validatePath(sourcePath, matchedPath)
-  if (validPath === null) {
+  if (!validPath) {
     validPath = !routes[`*`] ? null : sourcePath
-    const validValue = validPath === null ? null : routes[`*`]
+    const validValue = !validPath ? null : routes[`*`]
     return {
       validPath,
       validValue,
@@ -115,11 +116,11 @@ function switchPath(sourcePath, routes) {
   let matchedPath = null
   let value = null
   for (let pattern in routes) {
-    if (!shouldCheck(routes, pattern)) {
+    if (!isNormalPattern(routes, pattern)) {
       continue
     }
     validatePatternPreconditions(pattern)
-    if (sourcePath.search(pattern) === 0 && matchedPath === null) {
+    if (sourcePath.search(pattern) === 0) {
       matchedPath = pattern
       value = routes[pattern]
     }
