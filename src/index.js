@@ -1,5 +1,6 @@
 function isPattern(candidate) {
-  return typeof candidate === `string` && candidate.charAt(0) === `/`
+  return typeof candidate === `string` &&
+    (candidate.charAt(0) === `/` || candidate.charAt(0) === `*`)
 }
 
 function isRouteConfigurationObject(routes) {
@@ -18,6 +19,9 @@ function unprefixed(fullStr, prefix) {
 }
 
 function matchesWithParams(sourcePath, pattern) {
+  if (pattern === `*`) {
+    return null
+  }
   const sourceParts = sourcePath.split(`/`).filter(s => s.length > 0)
   const patternParts = pattern.split(`/`).filter(s => s.length > 0)
   const params = patternParts.map((patternPart, index) => {
@@ -49,6 +53,13 @@ function validatePatternPreconditions(pattern) {
   }
 }
 
+function shouldCheck(routes, pattern) {
+  if (pattern === `*` || !routes.hasOwnProperty(pattern)) {
+    return false
+  }
+  return true
+}
+
 function handleTrailingSlash(paramsFn) {
   if (isRouteConfigurationObject(paramsFn)) {
     return paramsFn[`/`]
@@ -57,7 +68,46 @@ function handleTrailingSlash(paramsFn) {
 }
 
 function getParamsFnValue(paramFn, params) {
-  return handleTrailingSlash(paramFn)(params)
+  const _paramFn = handleTrailingSlash(paramFn)
+  if (typeof _paramFn !== `function`) {
+    return _paramFn
+  }
+  return _paramFn(params)
+}
+
+function splitPath(path) {
+  const pathParts = path.split(`/`)
+  if (pathParts[pathParts.length - 1] === ``) {
+    pathParts.pop()
+  }
+  return pathParts.join(`/`)
+}
+
+function validatePath(sourcePath, matchedPath) {
+  if (matchedPath === null) {
+    return ``
+  }
+  const newSourcePath = splitPath(sourcePath)
+  const newMatchedPath = splitPath(matchedPath)
+  if (newSourcePath !== newMatchedPath &&
+    sourcePath.split(`/`).splice(0,2).join(`/`) !== newMatchedPath)
+  {
+    return null
+  }
+  return newMatchedPath
+}
+
+function validate({sourcePath, matchedPath, value, routes}) {
+  let validPath = validatePath(sourcePath, matchedPath)
+  if (validPath === null) {
+    validPath = !routes[`*`] ? null : sourcePath
+    const validValue = validPath === null ? null : routes[`*`]
+    return {
+      validPath,
+      validValue,
+    }
+  }
+  return {validPath, validValue: value}
 }
 
 function switchPath(sourcePath, routes) {
@@ -65,7 +115,7 @@ function switchPath(sourcePath, routes) {
   let matchedPath = null
   let value = null
   for (let pattern in routes) {
-    if (!routes.hasOwnProperty(pattern)) {
+    if (!shouldCheck(routes, pattern)) {
       continue
     }
     validatePatternPreconditions(pattern)
@@ -90,7 +140,13 @@ function switchPath(sourcePath, routes) {
     }
   }
 
-  return {path: matchedPath, value}
+  const {validPath, validValue} = validate({
+    sourcePath,
+    matchedPath,
+    value,
+    routes,
+  })
+  return {path: validPath, value: validValue}
 }
 
 module.exports = switchPath

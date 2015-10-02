@@ -31,13 +31,49 @@ describe('switchPath', () => {
         '/foo': 456,
       },
     });
-
     expect(path).to.be.equal('/home/foo');
     expect(value).to.be.equal(456);
   });
 
   it('should match a path on an incomplete pattern', () => {
     const {path, value} = switchPath('/home/foo', {
+      '/bar': 123,
+      '/home': 456,
+    });
+    expect(path).to.be.equal('/home');
+    expect(value).to.be.equal(456);
+  });
+
+  it('should not match a path overoptimistically', () => {
+    const {path, value} = switchPath('/home/33/books/10', {
+      '/': 123,
+      '/authors': 234,
+      '/books': {
+        '/': 345,
+        '/:id': 456
+      }
+    });
+    expect(path).to.be.equal(null);
+    expect(value).to.be.equal(null);
+  });
+
+  it('should return match to a notFound pattern if provided', () => {
+    const {path, value} = switchPath('/home/33/books/10', {
+      '/': 123,
+      '/authors': 234,
+      '/books': {
+        '/': 345,
+        '/:id': 456
+      },
+      '*': 'Route not defined'
+    });
+    expect(path).to.be.equal('/home/33/books/10');
+    expect(value).to.be.equal('Route not defined');
+  });
+
+  it('should not prematurely match a notFound pattern', () => {
+    const {path, value} = switchPath('/home/foo', {
+      '*': 0,
       '/bar': 123,
       '/home': 456,
     });
