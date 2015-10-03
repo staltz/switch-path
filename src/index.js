@@ -19,9 +19,6 @@ function unprefixed(fullStr, prefix) {
 }
 
 function matchesWithParams(sourcePath, pattern) {
-  if (pattern === `*`) {
-    return null
-  }
   const sourceParts = sourcePath.split(`/`).filter(s => s.length > 0)
   const patternParts = pattern.split(`/`).filter(s => s.length > 0)
   const params = patternParts.map((patternPart, index) => {
