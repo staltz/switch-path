@@ -2,7 +2,7 @@
 import {expect} from 'chai';
 import switchPath from '../src/index';
 
-describe('switchPath', () => {
+describe('switchPath basic usage', () => {
   it('should match a basic path', () => {
     const {path, value} = switchPath('/home/foo', {
       '/bar': 123,
@@ -132,6 +132,17 @@ describe('switchPath', () => {
       }
     });
     expect(path).to.be.equal('/1736');
+    expect(value).to.be.equal('id is 1736');
+  });
+});
+
+describe('switchPath corner cases', () => {
+  it('should match more specific path in case many match', () => {
+    const {path, value} = switchPath('/home/1736', {
+      '/home/:id': id => `id is ${id}`,
+      '/': 'root',
+    });
+    expect(path).to.be.equal('/home/1736');
     expect(value).to.be.equal('id is 1736');
   });
 });

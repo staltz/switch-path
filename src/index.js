@@ -108,6 +108,16 @@ function validate({sourcePath, matchedPath, value, routes}) {
   return {validPath, validValue: value}
 }
 
+function betterMatch(candidate, reference) {
+  if (candidate === null) {
+    return false
+  }
+  if (reference === null) {
+    return true
+  }
+  return candidate.length >= reference.length
+}
+
 function switchPath(sourcePath, routes) {
   validateSwitchPathPreconditions(sourcePath, routes)
   let matchedPath = null
@@ -117,19 +127,20 @@ function switchPath(sourcePath, routes) {
       continue
     }
     validatePatternPreconditions(pattern)
-    if (sourcePath.search(pattern) === 0) {
+    if (sourcePath.search(pattern) === 0 && betterMatch(pattern, matchedPath)) {
       matchedPath = pattern
       value = routes[pattern]
     }
     const params = matchesWithParams(sourcePath, pattern)
-    if (params.length > 0) {
+    if (params.length > 0 && betterMatch(sourcePath, matchedPath)) {
       matchedPath = sourcePath
       value = getParamsFnValue(routes[pattern], params)
     }
     if (isRouteConfigurationObject(routes[pattern]) && params.length === 0) {
       const child = switchPath(unprefixed(sourcePath, pattern), routes[pattern])
-      if (child.path !== null) {
-        matchedPath = pattern + child.path
+      const nestedPath = pattern + child.path
+      if (child.path !== null && betterMatch(nestedPath, matchedPath)) {
+        matchedPath = nestedPath
         value = child.value
       }
     }
