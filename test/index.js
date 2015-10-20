@@ -145,4 +145,13 @@ describe('switchPath corner cases', () => {
     expect(path).to.be.equal('/home/1736');
     expect(value).to.be.equal('id is 1736');
   });
+
+  it('should match exact path in case many match', () => {
+    const {path, value} = switchPath('/', {
+      '/home/:id': id => `id is ${id}`,
+      '/': 'root',
+    });
+    expect(path).to.be.equal('/');
+    expect(value).to.be.equal('root');
+  });
 });
