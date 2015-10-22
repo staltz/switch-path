@@ -154,4 +154,14 @@ describe('switchPath corner cases', () => {
     expect(path).to.be.equal('/');
     expect(value).to.be.equal('root');
   });
+
+  it('should not match unrelated paths that have with params', () => {
+    const {path, value} = switchPath('/home/123', {
+      '/': 'root',
+      '/home/:id': id => `home is ${id}`,
+      '/external/:id': id => `external is ${id}`,
+    });
+    expect(path).to.be.equal('/home/123');
+    expect(value).to.be.equal('home is 123');
+  });
 });

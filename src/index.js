@@ -28,7 +28,10 @@ function matchesWithParams(sourcePath, pattern) {
       return null
     }
   }).filter(x => x !== null)
-  return params
+  const matched = patternParts.every((part, i) =>
+    part.match(/:\w+/) !== null || part === sourceParts[i]
+  )
+  return matched ? params : []
 }
 
 function validateSwitchPathPreconditions(sourcePath, routes) {
