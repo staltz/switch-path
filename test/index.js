@@ -155,6 +155,35 @@ describe('switchPath corner cases', () => {
     expect(value).to.be.equal('root');
   });
 
+  it('should call valueFn with a single param as spread, not as array', () => {
+    const {path, value} = switchPath('/home/123', {
+      '/home/:id': id => {
+        expect(Array.isArray(id)).to.be.equal(false);
+        expect(typeof id).to.be.equal('string');
+        expect(id).to.be.equal('123');
+        return 0; },
+      '/': 'root',
+    });
+    expect(path).to.be.equal('/home/123');
+    expect(value).to.be.equal(0);
+  });
+
+  it('should call valueFn with multiple params as spread, not as array', () => {
+    const {path, value} = switchPath('/home/123/blast', {
+      '/home/:id/:second': (id, second) => {
+        expect(Array.isArray(id)).to.be.equal(false);
+        expect(typeof id).to.be.equal('string');
+        expect(id).to.be.equal('123');
+        expect(Array.isArray(second)).to.be.equal(false);
+        expect(typeof second).to.be.equal('string');
+        expect(second).to.be.equal('blast');
+        return 0; },
+      '/': 'root',
+    });
+    expect(path).to.be.equal('/home/123/blast');
+    expect(value).to.be.equal(0);
+  });
+
   it('should not match unrelated paths that have with params', () => {
     const {path, value} = switchPath('/home/123', {
       '/': 'root',

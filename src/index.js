@@ -72,7 +72,7 @@ function getParamsFnValue(paramFn, params) {
   if (typeof _paramFn !== `function`) {
     return _paramFn
   }
-  return _paramFn(params)
+  return _paramFn.apply(null, params)
 }
 
 function splitPath(path) {
