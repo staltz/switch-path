@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cyclejs/switch-path"
+    "url": "https://github.com/staltz/switch-path"
   },
   "devDependencies": {
     "babel": "5.8.x",
