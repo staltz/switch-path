@@ -83,6 +83,19 @@ function splitPath(path) {
   return pathParts
 }
 
+function matchPartial(sourcePath, pattern) {
+  const patternParts = splitPath(pattern)
+  const sourceParts = splitPath(sourcePath)
+
+  const matchedParts = []
+
+  for (let i = 0; i < patternParts.length; ++i) {
+    matchedParts.push(sourceParts[i])
+  }
+
+  return matchedParts.join(`/`)
+}
+
 function validatePath(sourcePath, matchedPath) {
   if (matchedPath === null) {
     return ``
@@ -136,7 +149,7 @@ function switchPath(sourcePath, routes) {
     }
     const params = matchesWithParams(sourcePath, pattern)
     if (params.length > 0 && betterMatch(sourcePath, matchedPath)) {
-      matchedPath = sourcePath
+      matchedPath = matchPartial(sourcePath, pattern)
       value = getParamsFnValue(routes[pattern], params)
     }
     if (isRouteConfigurationObject(routes[pattern]) && params.length === 0) {
