@@ -2,6 +2,8 @@
 
 > Advanced `switch case` for URLs, a small tool for routing in JavaScript
 
+[![npm version](https://badge.fury.io/js/switch-path.svg)](https://badge.fury.io/js/switch-path)
+
 ```
 npm install switch-path
 ```
