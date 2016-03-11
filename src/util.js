@@ -44,10 +44,6 @@ export function extractPartial(sourcePath, pattern) {
   return matchedParts.filter(isNotNull).join(`/`)
 }
 
-export function handleTrailingSlash(candidate) {
-  return isRouteDefinition(candidate) ? candidate[`/`] : candidate
-}
-
 export function unprefixed(fullString, prefix) {
   return fullString.split(prefix)[1]
 }

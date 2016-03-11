@@ -6,7 +6,6 @@ import {
   splitPath,
   isParam,
   extractPartial,
-  handleTrailingSlash,
   unprefixed,
 } from './util'
 
@@ -45,7 +44,7 @@ function matchesWithParams(sourcePath, pattern) {
 }
 
 function getParamFnValue(paramFn, params) {
-  const _paramFn = handleTrailingSlash(paramFn)
+  const _paramFn = isRouteDefinition(paramFn) ? paramFn[`/`] : paramFn
   return typeof _paramFn === `function` ? _paramFn(...params) : _paramFn
 }
 
