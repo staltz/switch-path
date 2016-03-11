@@ -193,4 +193,24 @@ describe('switchPath corner cases', () => {
     expect(path).to.be.equal('/home/123');
     expect(value).to.be.equal('home is 123');
   });
+
+  it('should partially match :key type params', () => {
+    const {path, value} = switchPath('/home/123/456', {
+      '/': 'root',
+      '/home/:id': id => `home is ${id}`,
+      '/external/:id': id => `external is ${id}`,
+    });
+    expect(path).to.be.equal('/home/123');
+    expect(value).to.be.equal('home is 123');
+  });
+
+  it('should partially match multiple :key type params', () => {
+    const {path, value} = switchPath('/home/123/456/something', {
+      '/': 'root',
+      '/home/:id/:other': (id, other) => `${id}:${other}`,
+      '/external/:id/:other': (id, other) => `external`,
+    });
+    expect(path).to.be.equal('/home/123/456')
+    expect(value).to.be.equal('123:456')
+  })
 });
