@@ -28,7 +28,7 @@
     "eslint": "eslint src/",
     "mocha": "mocha --compilers js:babel-core/register test",
     "test": "npm run eslint && npm run mocha",
-    "test-ci": "npm run eslint",
+    "test-ci": "npm run eslint && npm run mocha",
     "browserify": "browserify src/index.js -t babelify --standalone switchPath --outfile dist/switch-path.js",
     "uglify": "uglifyjs dist/switch-path.js -o dist/switch-path.min.js",
     "precompile-lib": "rm -rf lib/ && mkdir -p lib",
