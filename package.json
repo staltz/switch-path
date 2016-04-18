@@ -34,7 +34,6 @@
     "precompile-lib": "rm -rf lib/ && mkdir -p lib",
     "compile-lib": "babel -d lib/ src/",
     "dist": "npm run browserify && npm run uglify",
-    "docs": "node ./scripts/make-api-docs.js",
     "prepublish": "npm run compile-lib",
     "release": "npm run release-patch",
     "release-patch": "git checkout master && npm run dist; git commit -a -m 'Build dist/'; npm version patch && git push origin master --tags && npm publish --access=public",
