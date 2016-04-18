@@ -213,4 +213,14 @@ describe('switchPath corner cases', () => {
     expect(path).to.be.equal('/home/123/456')
     expect(value).to.be.equal('123:456')
   })
+
+  it('should not match a :key type route if no params are given', () => {
+    const {path, value} = switchPath('/', {
+      '/': 'root',
+      '/:id': (id) => `$id`
+    })
+
+    expect(path).to.be.equal('/')
+    expect(value).to.be.equal('root')
+  })
 });

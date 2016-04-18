@@ -82,7 +82,7 @@ function switchPath(sourcePath, routes) {
       matchedValue = routes[pattern]
     }
 
-    const params = matchesWithParams(sourcePath, pattern)
+    const params = matchesWithParams(sourcePath, pattern).filter(Boolean)
 
     if (params.length > 0 && betterMatch(sourcePath, matchedPath)) {
       matchedPath = extractPartial(sourcePath, pattern)
