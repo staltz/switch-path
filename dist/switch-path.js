@@ -95,14 +95,18 @@ function switchPath(sourcePath, routes) {
     }
 
     if ((0, _util.isRouteDefinition)(routes[pattern]) && params.length === 0) {
-      var child = switchPath((0, _util.unprefixed)(sourcePath, pattern) || '/', routes[pattern]);
-      var nestedPath = pattern + child.path;
-      if (!child.path !== null && betterMatch(nestedPath, matchedPath)) {
-        matchedPath = nestedPath;
-        matchedValue = child.value;
+      if (sourcePath !== '/') {
+        var child = switchPath((0, _util.unprefixed)(sourcePath, pattern) || '/', routes[pattern]);
+        var nestedPath = pattern + child.path;
+        if (!child.path !== null && betterMatch(nestedPath, matchedPath)) {
+          matchedPath = nestedPath;
+          matchedValue = child.value;
+        }
       }
     }
   });
+
+  console.log({ sourcePath: sourcePath, matchedPath: matchedPath, matchedValue: matchedValue }, validate({ sourcePath: sourcePath, matchedPath: matchedPath, matchedValue: matchedValue, routes: routes }));
 
   return validate({ sourcePath: sourcePath, matchedPath: matchedPath, matchedValue: matchedValue, routes: routes });
 }
