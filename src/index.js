@@ -90,17 +90,26 @@ function switchPath(sourcePath, routes) {
     }
 
     if (isRouteDefinition(routes[pattern]) && params.length === 0) {
-      const child = switchPath(
-        unprefixed(sourcePath, pattern) || `/`,
-        routes[pattern]
-      )
-      const nestedPath = pattern + child.path
-      if (!child.path !== null && betterMatch(nestedPath, matchedPath)) {
-        matchedPath = nestedPath
-        matchedValue = child.value
+      if (sourcePath !== `/`) {
+        const child = switchPath(
+          unprefixed(sourcePath, pattern) || `/`,
+          routes[pattern]
+        )
+        const nestedPath = pattern + child.path
+        if (!child.path !== null &&
+          betterMatch(nestedPath, matchedPath))
+        {
+          matchedPath = nestedPath
+          matchedValue = child.value
+        }
       }
     }
   })
+
+  console.log(
+    {sourcePath, matchedPath, matchedValue},
+    validate({sourcePath, matchedPath, matchedValue, routes})
+  )
 
   return validate({sourcePath, matchedPath, matchedValue, routes})
 }

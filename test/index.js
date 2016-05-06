@@ -24,6 +24,35 @@ describe('switchPath basic usage', () => {
     expect(value).to.be.equal(123);
   });
 
+  it('should match a nested root path in a very nested configuration', () => {
+    const {path, value} = switchPath('/home', {
+      '/': 12,
+      '/home': {
+        '/': 34,
+        '/foo': {
+          '/': 56
+        }
+      }
+    });
+    expect(path).to.be.equal('/home');
+    expect(value).to.be.equal(34);
+  });
+
+  it('should match a nested root path in a very nested configuration', () => {
+    const {path, value} = switchPath('/foo/bar', {
+      '/': 12,
+      '/home': {
+        '/': 34,
+        '/foo': {
+          '/': 56,
+          '/bar': 78
+        }
+      }
+    });
+    expect(path).to.be.equal('/foo/bar');
+    expect(value).to.be.equal(78);
+  });
+
   it('should match a base path in a nested configuration', () => {
     const {path, value} = switchPath('/home', {
       '/bar': 123,
