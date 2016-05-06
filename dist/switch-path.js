@@ -106,8 +106,6 @@ function switchPath(sourcePath, routes) {
     }
   });
 
-  console.log({ sourcePath: sourcePath, matchedPath: matchedPath, matchedValue: matchedValue }, validate({ sourcePath: sourcePath, matchedPath: matchedPath, matchedValue: matchedValue, routes: routes }));
-
   return validate({ sourcePath: sourcePath, matchedPath: matchedPath, matchedValue: matchedValue, routes: routes });
 }
 
