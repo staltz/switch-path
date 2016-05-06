@@ -39,7 +39,7 @@ describe('switchPath basic usage', () => {
   });
 
   it('should match a nested root path in a very nested configuration', () => {
-    const {path, value} = switchPath('/foo/bar', {
+    const {path, value} = switchPath('/home/foo/bar', {
       '/': 12,
       '/home': {
         '/': 34,
@@ -49,7 +49,7 @@ describe('switchPath basic usage', () => {
         }
       }
     });
-    expect(path).to.be.equal('/foo/bar');
+    expect(path).to.be.equal('/home/foo/bar');
     expect(value).to.be.equal(78);
   });
 
