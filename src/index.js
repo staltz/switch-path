@@ -106,11 +106,6 @@ function switchPath(sourcePath, routes) {
     }
   })
 
-  console.log(
-    {sourcePath, matchedPath, matchedValue},
-    validate({sourcePath, matchedPath, matchedValue, routes})
-  )
-
   return validate({sourcePath, matchedPath, matchedValue, routes})
 }
 
