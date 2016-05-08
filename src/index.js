@@ -77,6 +77,14 @@ function switchPath(sourcePath, routes) {
   let matchedValue = null
 
   traverseRoutes(routes, function matchPattern(pattern) {
+    if (pattern === `/`) {
+      // TODO: check if `/` & `*` are present at the same time in sourcePath
+      console.log(sourcePath)
+      console.log(routes)
+      matchedPath = `/`
+      matchedValue = routes[pattern]
+    }
+
     if (sourcePath.search(pattern) === 0 && betterMatch(pattern, matchedPath)) {
       matchedPath = pattern
       matchedValue = routes[pattern]
@@ -105,7 +113,6 @@ function switchPath(sourcePath, routes) {
       }
     }
   })
-
   return validate({sourcePath, matchedPath, matchedValue, routes})
 }
 
