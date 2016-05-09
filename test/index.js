@@ -109,30 +109,6 @@ describe('switchPath basic usage', () => {
     expect(value).to.be.equal(null);
   });
 
-  // TODO: fix the test to work as expected
-  it('should match a root base path when using `/` and `*`', () => {
-    const {path, value} = switchPath('/abc', {
-      '/': 123,
-      '/home': 456,
-      '/bar': 789,
-      '*': 'Route not defined'
-    });
-    expect(path).to.be.equal('/abc');
-    expect(value).to.be.equal('Route not defined');
-  });
-  
-  // TODO: fix the test to work as expected
-  it('should still match a notFound pattern when using `/` and `*`', () => {
-    const {path, value} = switchPath('/', {
-      '/': 123,
-      '/home': 456,
-      '/bar': 789,
-      '*': 'Route not defined'
-    });
-    expect(path).to.be.equal('/');
-    expect(value).to.be.equal(123);
-  });
-
   it('should return match to a notFound pattern if provided', () => {
     const {path, value} = switchPath('/123', {
       '/': 123,
@@ -198,6 +174,38 @@ describe('switchPath basic usage', () => {
     });
     expect(path).to.be.equal('/1736');
     expect(value).to.be.equal('id is 1736');
+  });
+
+  it('should match routes explicitly using `$`', () => {
+    const {path, value} = switchPath('/', {
+      '/$': 123,
+      '/other': 456,
+      '*': 'not found route'
+    })
+
+    expect(path).to.be.equal('/');
+    expect(value).to.be.equal(123);
+  })
+
+  it('should match routes explicitly using `$`', () => {
+    const {path, value} = switchPath('/other', {
+      '/': 123,
+      '/other/$': 456
+    })
+
+    expect(path).to.be.equal('/other');
+    expect(value).to.be.equal(456);
+  })
+
+  it('should allow opting out of partial matching for routes using `$`', () => {
+    const {path, value} = switchPath('/random', {
+      '/$': 123,
+      '/other': 456,
+      '*': 'not found route'
+    });
+
+    expect(path).to.be.equal('/random');
+    expect(value).to.be.equal('not found route');
   });
 });
 

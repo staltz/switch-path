@@ -65,8 +65,13 @@ function validate({sourcePath, matchedPath, matchedValue, routes}) {
   let path = matchedPath ? validatePath(sourcePath, matchedPath) : null
   let value = matchedValue
   if (!path) {
-    path = routes[`*`] ? sourcePath : null
-    value = path ? routes[`*`] : null
+    if (sourcePath === `/`) {
+      path = routes[`*`] ? sourcePath : null
+      value = path ? routes[`/$`] : null
+    } else {
+      path = routes[`*`] ? sourcePath : null
+      value = path ? routes[`*`] : null
+    }
   }
   return {path, value}
 }
@@ -76,13 +81,18 @@ function switchPath(sourcePath, routes) {
   let matchedPath = null
   let matchedValue = null
 
-  traverseRoutes(routes, function matchPattern(pattern) {
-    if (pattern === `/`) {
-      // TODO: check if `/` & `*` are present at the same time in sourcePath
-      console.log(sourcePath)
-      console.log(routes)
-      matchedPath = `/`
-      matchedValue = routes[pattern]
+  traverseRoutes(routes, function matchPattern(pattern) { // eslint-disable-line complexity, max-len
+    if (pattern[pattern.length - 1] === `$`) {
+      const realPattern = pattern.split(`/$`).join(``)
+      if (sourcePath.search(realPattern) === 0 &&
+        betterMatch(pattern, matchedPath) ||
+        sourcePath.search(realPattern + `/`) &&
+        betterMatch(pattern, matchedPath))
+      {
+        matchedPath = realPattern
+        matchedValue = routes[pattern]
+      }
+      return
     }
 
     if (sourcePath.search(pattern) === 0 && betterMatch(pattern, matchedPath)) {
