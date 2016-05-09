@@ -110,7 +110,7 @@ describe('switchPath basic usage', () => {
   });
 
   it('should return match to a notFound pattern if provided', () => {
-    const {path, value} = switchPath('/123', {
+    const {path, value} = switchPath('/home/33/books/10', {
       '/': 123,
       '/authors': 234,
       '/books': {
@@ -119,7 +119,7 @@ describe('switchPath basic usage', () => {
       },
       '*': 'Route not defined'
     });
-    expect(path).to.be.equal('/123');
+    expect(path).to.be.equal('/home/33/books/10');
     expect(value).to.be.equal('Route not defined');
   });
 
