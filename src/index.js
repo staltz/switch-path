@@ -76,7 +76,20 @@ function switchPath(sourcePath, routes) {
   let matchedPath = null
   let matchedValue = null
 
-  traverseRoutes(routes, function matchPattern(pattern) {
+  traverseRoutes(routes, function matchPattern(pattern) { // eslint-disable-line complexity, max-len
+    if (pattern[pattern.length - 1] === `$`) {
+      const realPattern = pattern.split(`/$`).join(``)
+      if (sourcePath.search(realPattern) === 0 &&
+          betterMatch(pattern, matchedPath) ||
+          sourcePath.search(realPattern + `/`) &&
+          betterMatch(pattern, matchedPath))
+      {
+        matchedPath = realPattern
+        matchedValue = routes[pattern]
+      }
+      return
+    }
+
     if (sourcePath.search(pattern) === 0 && betterMatch(pattern, matchedPath)) {
       matchedPath = pattern
       matchedValue = routes[pattern]
