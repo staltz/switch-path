@@ -96,7 +96,8 @@ function switchPath(sourcePath, routes) {
           routes[pattern]
         )
         const nestedPath = pattern + child.path
-        if (!child.path !== null &&
+        if (child.path !== null &&
+          validatePath(nestedPath, matchedPath) &&
           betterMatch(nestedPath, matchedPath))
         {
           matchedPath = nestedPath
