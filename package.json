@@ -1,6 +1,6 @@
 {
   "name": "switch-path",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "switch case for URLs, a small tool for routing in JavaScript",
   "main": "lib/index.js",
   "author": "Andre Staltz",
