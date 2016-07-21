@@ -18,12 +18,28 @@ function switchPathInputGuard(path, routes) {
   }
 }
 
+function validatePath(sourcePath, matchedPath) {
+  var sourceParts = (0, _util.splitPath)(sourcePath);
+  var matchedParts = (0, _util.splitPath)(matchedPath);
+
+  for (var i = 0; i < matchedParts.length; ++i) {
+    if (matchedParts[i] !== sourceParts[i]) {
+      return null;
+    }
+  }
+
+  return '/' + (0, _util.extractPartial)(sourcePath, matchedPath);
+}
+
 function betterMatch(candidate, reference) {
   if (!(0, _util.isNotNull)(candidate)) {
     return false;
   }
   if (!(0, _util.isNotNull)(reference)) {
     return true;
+  }
+  if (!validatePath(candidate, reference)) {
+    return false;
   }
   return candidate.length >= reference.length;
 }
@@ -46,19 +62,6 @@ function matchesWithParams(sourcePath, pattern) {
 function getParamFnValue(paramFn, params) {
   var _paramFn = (0, _util.isRouteDefinition)(paramFn) ? paramFn['/'] : paramFn;
   return typeof _paramFn === 'function' ? _paramFn.apply(undefined, _toConsumableArray(params)) : _paramFn;
-}
-
-function validatePath(sourcePath, matchedPath) {
-  var sourceParts = (0, _util.splitPath)(sourcePath);
-  var matchedParts = (0, _util.splitPath)(matchedPath);
-
-  for (var i = 0; i < matchedParts.length; ++i) {
-    if (matchedParts[i] !== sourceParts[i]) {
-      return null;
-    }
-  }
-
-  return '/' + (0, _util.extractPartial)(sourcePath, matchedPath);
 }
 
 function validate(_ref) {
@@ -98,7 +101,7 @@ function switchPath(sourcePath, routes) {
       if (sourcePath !== '/') {
         var child = switchPath((0, _util.unprefixed)(sourcePath, pattern) || '/', routes[pattern]);
         var nestedPath = pattern + child.path;
-        if (!child.path !== null && betterMatch(nestedPath, matchedPath)) {
+        if (child.path !== null && betterMatch(nestedPath, matchedPath)) {
           matchedPath = nestedPath;
           matchedValue = child.value;
         }
