@@ -53,6 +53,18 @@ describe('switchPath basic usage', () => {
     expect(value).to.be.equal(78);
   });
 
+  it('should match a base path having a match in a sibling\'s nested configuration', () => {
+    const {path, value} = switchPath('/bar', {
+      '/bar': 123,
+      '/home': {
+        '/': 456,
+        '/foo': 789
+      }
+    });
+    expect(path).to.be.equal('/bar');
+    expect(value).to.be.equal(123);
+  });
+
   it('should match a base path in a nested configuration', () => {
     const {path, value} = switchPath('/home', {
       '/bar': 123,

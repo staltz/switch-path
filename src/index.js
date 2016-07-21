@@ -19,12 +19,28 @@ function switchPathInputGuard(path, routes) {
   }
 }
 
+function validatePath(sourcePath, matchedPath) {
+  const sourceParts = splitPath(sourcePath)
+  const matchedParts = splitPath(matchedPath)
+
+  for (let i = 0; i < matchedParts.length; ++i) {
+    if (matchedParts[i] !== sourceParts[i]) {
+      return null
+    }
+  }
+
+  return `/${extractPartial(sourcePath, matchedPath)}`
+}
+
 function betterMatch(candidate, reference) {
   if (!isNotNull(candidate)) {
     return false
   }
   if (!isNotNull(reference)) {
     return true
+  }
+  if (!validatePath(candidate, reference)) {
+    return false
   }
   return candidate.length >= reference.length
 }
@@ -46,19 +62,6 @@ function matchesWithParams(sourcePath, pattern) {
 function getParamFnValue(paramFn, params) {
   const _paramFn = isRouteDefinition(paramFn) ? paramFn[`/`] : paramFn
   return typeof _paramFn === `function` ? _paramFn(...params) : _paramFn
-}
-
-function validatePath(sourcePath, matchedPath) {
-  const sourceParts = splitPath(sourcePath)
-  const matchedParts = splitPath(matchedPath)
-
-  for (let i = 0; i < matchedParts.length; ++i) {
-    if (matchedParts[i] !== sourceParts[i]) {
-      return null
-    }
-  }
-
-  return `/${extractPartial(sourcePath, matchedPath)}`
 }
 
 function validate({sourcePath, matchedPath, matchedValue, routes}) {
@@ -96,7 +99,7 @@ function switchPath(sourcePath, routes) {
           routes[pattern]
         )
         const nestedPath = pattern + child.path
-        if (!child.path !== null &&
+        if (child.path !== null &&
           betterMatch(nestedPath, matchedPath))
         {
           matchedPath = nestedPath
