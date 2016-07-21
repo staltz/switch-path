@@ -187,6 +187,27 @@ describe('switchPath basic usage', () => {
     expect(path).to.be.equal('/1736');
     expect(value).to.be.equal('id is 1736');
   });
+
+  it('should match routes explicitly using `$`', () => {
+    const {path, value} = switchPath('/other', {
+      '/': 123,
+      '/other/$': 456
+    })
+
+    expect(path).to.be.equal('/other');
+    expect(value).to.be.equal(456);
+  })
+
+  it('should allow opting out of partial matching for routes using `$`', () => {
+    const {path, value} = switchPath('/random', {
+      '/$': 123,
+      '/other': 456,
+      '*': 'not found route'
+    });
+
+    expect(path).to.be.equal('/random');
+    expect(value).to.be.equal('not found route');
+  });
 });
 
 describe('switchPath corner cases', () => {
