@@ -135,6 +135,18 @@ describe('switchPath basic usage', () => {
     expect(value).to.be.equal('Route not defined');
   });
 
+  it('should return match to a notFound pattern if provided non-nested configuration', () => {
+    const {path, value} = switchPath('/home/33/books/10', {
+      '/': 123,
+      '/authors': 234,
+      '/books': 345,
+      '/books/:id': 456,
+      '*': 'Route not defined'
+    });
+    expect(path).to.be.equal('/home/33/books/10');
+    expect(value).to.be.equal('Route not defined');
+  });
+
   it('should not prematurely match a notFound pattern', () => {
     const {path, value} = switchPath('/home/foo', {
       '*': 0,
