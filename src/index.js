@@ -67,7 +67,7 @@ function getParamFnValue(paramFn, params) {
 function validate({sourcePath, matchedPath, matchedValue, routes}) {
   let path = matchedPath ? validatePath(sourcePath, matchedPath) : null
   let value = matchedValue
-  if (!path) {
+  if (!path || routes[`*`]) {
     path = routes[`*`] ? sourcePath : null
     value = path ? routes[`*`] : null
   }
