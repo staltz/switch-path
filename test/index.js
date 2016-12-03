@@ -147,6 +147,76 @@ describe('switchPath basic usage', () => {
     expect(value).to.be.equal('Route not defined');
   });
 
+  it('should match a base root path when notFound is specified', () => {
+    const {path, value} = switchPath('/', {
+      '/': 123,
+      '*': 'Route not defined'
+    });
+    expect(path).to.be.equal('/');
+    expect(value).to.be.equal(123);
+  });
+
+  it('should match a base path when notFound is specified', () => {
+    const {path, value} = switchPath('/books', {
+      '/': 123,
+      '/books': 234,
+      '/books/:id': 345,
+      '*': 'Route not defined'
+    });
+    expect(path).to.be.equal('/books');
+    expect(value).to.be.equal(234);
+  });
+
+  it('should match a base parameter path when notFound is specified', () => {
+    const {path, value} = switchPath('/10', {
+      '/': 123,
+      '/:id': id => `id is ${id}`,
+      '*': 'Route not defined'
+    });
+    expect(path).to.be.equal('/10');
+    expect(value).to.be.equal('id is 10');
+  });
+
+  it('should match a base nested paramter path when notFound is specified', () => {
+    const {path, value} = switchPath('/1736', {
+      '/': 123,
+      '/bar': 234,
+      '/:id': {
+        '/': id => `id is ${id}`,
+        '/home': 345
+      },
+      '*': 'Route not defined'
+    });
+    expect(path).to.be.equal('/1736');
+    expect(value).to.be.equal('id is 1736');
+  });
+
+  it('should match a nested root path when notFound is specified', () => {
+    const {path, value} = switchPath('/books', {
+      '/': 123,
+      '/books': {
+        '/': 234,
+        '/:id': 345
+      },
+      '*': 'Route not defined'
+    });
+    expect(path).to.be.equal('/books');
+    expect(value).to.be.equal(234);
+  });
+
+  it('should match a nested parameter path when notFound is specified', () => {
+    const {path, value} = switchPath('/books/10', {
+      '/': 123,
+      '/books': {
+        '/': 234,
+        '/:id': id => `id is ${id}`
+      },
+      '*': 'Route not defined'
+    });
+    expect(path).to.be.equal('/books/10');
+    expect(value).to.be.equal('id is 10');
+  });
+
   it('should not prematurely match a notFound pattern', () => {
     const {path, value} = switchPath('/home/foo', {
       '*': 0,
