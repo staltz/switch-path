@@ -42,7 +42,7 @@ function betterMatch(candidate, reference) {
   if (!validatePath(candidate, reference)) {
     return false
   }
-  return candidate.length >= reference.length
+  return candidate.length > reference.length
 }
 
 function matchesWithParams(sourcePath, pattern) {
@@ -67,9 +67,12 @@ function getParamFnValue(paramFn, params) {
 function validate({sourcePath, matchedPath, matchedValue, routes}) {
   let path = matchedPath ? validatePath(sourcePath, matchedPath) : null
   let value = matchedValue
-  if (!path || routes[`*`]) {
+  if (!path) {
     path = routes[`*`] ? sourcePath : null
     value = path ? routes[`*`] : null
+  } else if (routes[`*`] && betterMatch(sourcePath, path)) {
+    path = sourcePath
+    value = routes[`*`]
   }
   return {path, value}
 }
