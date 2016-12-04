@@ -276,4 +276,24 @@ describe('switchPath corner cases', () => {
     expect(path).to.be.equal('/')
     expect(value).to.be.equal('root')
   })
+
+  it('should deterministically match more specific path in case many match', () => {
+    (() => {
+      let {path, value} = switchPath('/home/specific', {
+        '/home/specific': 123,
+        '/home/:id': id => `id is ${id}`
+      });
+      expect(path).to.be.equal('/home/specific');
+      expect(value).to.be.equal(123);
+    })();
+
+    (() => {
+      let {path, value} = switchPath('/home/specific', {
+        '/home/:id': id => `id is ${id}`,
+        '/home/specific': 123
+      });
+      expect(path).to.be.equal('/home/specific');
+      expect(value).to.be.equal(123);
+    })();
+  });
 });
