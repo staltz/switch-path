@@ -1,6 +1,6 @@
 {
   "name": "switch-path",
-  "version": "1.1.8",
+  "version": "1.2.0",
   "description": "switch case for URLs, a small tool for routing in JavaScript",
   "jsnext:main": "lib/es2015/index.js",
   "module": "lib/es2015/index.js",
