@@ -80,8 +80,13 @@ function validate({sourcePath, matchedPath, matchedValue, routes}: ValidationObj
   let path = matchedPath ? validatePath(sourcePath, matchedPath) : null;
   let value = matchedValue;
   if (!path) {
-    path = routes[`*`] ? sourcePath : null;
-    value = path ? routes[`*`] : null;
+    if (sourcePath === `/`) {
+      path = routes[`*`] ? sourcePath : null;
+      value = path ? routes[`/$`] : null;
+    } else {
+      path = routes[`*`] ? sourcePath : null;
+      value = path ? routes[`*`] : null;
+    }
   }
   return {path, value};
 }
@@ -95,6 +100,19 @@ export default function switchPath(
   let matchedValue: string | null = null;
 
   traverseRoutes(routes, function matchPattern(pattern) {
+    if (pattern[pattern.length - 1] === `$`) {
+      const realPattern = pattern.split(`/$`).join(``);
+      if (sourcePath.search(realPattern) === 0 &&
+        betterMatch(pattern, matchedPath) ||
+        sourcePath.search(realPattern + `/`) &&
+        betterMatch(pattern, matchedPath))
+      {
+        matchedPath = realPattern;
+        matchedValue = routes[pattern];
+      }
+      return;
+    }
+
     if (sourcePath.search(pattern) === 0 && betterMatch(pattern, matchedPath)) {
       matchedPath = pattern;
       matchedValue = routes[pattern];

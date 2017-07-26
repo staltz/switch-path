@@ -203,6 +203,38 @@ describe('switchPath basic usage', () => {
     assert.strictEqual(path, '/1736');
     assert.strictEqual(value, 'id is 1736');
   });
+
+  it('should match routes explicitly using `$`', () => {
+    const { path, value } = switchPath('/', {
+      '/$': 123,
+      '/other': 456,
+      '*': 'not found route',
+    });
+
+    assert.strictEqual(path, '/');
+    assert.strictEqual(value, 123);
+  });
+
+  it('should match routes explicitly using `$`, even if they come after a potential match', () => {
+    const { path, value } = switchPath('/other', {
+      '/': 123,
+      '/other/$': 456,
+    });
+
+    assert.strictEqual(path, '/other');
+    assert.strictEqual(value, 456);
+  });
+
+   it('should allow opting out of partial matching for routes using `$`', () => {
+     const {path, value} = switchPath('/random', {
+       '/$': 123,
+       '/other': 456,
+       '*': 'not found route',
+     });
+
+     assert.strictEqual(path, '/random');
+     assert.strictEqual(value, 'not found route');
+   });
 });
 
 describe('switchPath corner cases', () => {
