@@ -93,6 +93,17 @@ const {path, value} = switchPath('/home/1736', {
 // value is 'id is 1736'
 ```
 
+Match a route with multiple `:param` parameters and get all parameter values in a function:
+
+```js
+const {path, value} = switchPath('/home/coca/cola', {
+  '/bar': 123,
+  '/home/:foo/:bar': (foo, bar) => `${foo}-${bar}`,
+});
+// path is `/home/coca/cola`
+// value is 'coca-cola'
+```
+
 Match a route with `:param` parameters also inside nested configurations:
 
 ```js
