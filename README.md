@@ -8,6 +8,8 @@
 npm install switch-path
 ```
 
+### Looking for maintainers
+
 ## Usage
 
 Basic usage:
