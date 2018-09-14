@@ -24,7 +24,7 @@
     "mocha": "^2.5.3",
     "ts-node": "^1.7.2",
     "tslint": "^4.0.2",
-    "typescript": "^2.1.4",
+    "typescript": "^2.3.4",
     "uglify-js": "^2.7.5",
     "validate-commit-msg": "^2.8.2"
   },
